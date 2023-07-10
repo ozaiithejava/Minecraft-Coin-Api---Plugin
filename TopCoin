@@ -1,0 +1,39 @@
+package me.ozaii.coin;
+
+import java.util.Map;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+
+public class TopCoin implements CommandExecutor {
+  private final CoinAPI plugin;
+  
+  public TopCoin(CoinAPI plugin) {
+    this.plugin = plugin;
+  }
+  
+  public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    if (command.getName().equalsIgnoreCase("topcoin")) {
+      Map<String, Double> topPlayers = this.plugin.getTopCoinPlayers(10);
+      sender.sendMessage(ChatColor.YELLOW + "En coini bulunan oyuncular:");
+      int rank = 1;
+      for (Map.Entry<String, Double> entry : topPlayers.entrySet()) {
+        String playerName = entry.getKey();
+        double coinAmount = ((Double)entry.getValue()).doubleValue();
+        if (rank == 1) {
+          sender.sendMessage(ChatColor.GOLD + String.format("%d. %s: %.2f", new Object[] { Integer.valueOf(rank), playerName, Double.valueOf(coinAmount) }));
+        } else if (rank == 2) {
+          sender.sendMessage(ChatColor.GREEN + String.format("%d. %s: %.2f", new Object[] { Integer.valueOf(rank), playerName, Double.valueOf(coinAmount) }));
+        } else if (rank == 3) {
+          sender.sendMessage(ChatColor.AQUA + String.format("%d. %s: %.2f", new Object[] { Integer.valueOf(rank), playerName, Double.valueOf(coinAmount) }));
+        } else {
+          sender.sendMessage(ChatColor.GRAY + String.format("%d. %s: %.2f", new Object[] { Integer.valueOf(rank), playerName, Double.valueOf(coinAmount) }));
+        } 
+        rank++;
+      } 
+      return true;
+    } 
+    return false;
+  }
+}
